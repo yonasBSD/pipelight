@@ -13,6 +13,7 @@ convert_case.workspace = true
 pipelight_utils = { path = "../pipelight_utils" }
 pipelight_git = { path = "../pipelight_git" }
 pipelight_exec = { path = "../pipelight_exec" }
+pipelight_error = { path = "../pipelight_error" }
 cast = { path = "../cast" }
 
 

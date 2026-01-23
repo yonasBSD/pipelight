@@ -9,13 +9,14 @@ use std::collections::HashMap;
 // Error Handling
 use log::warn;
 use miette::{Error, Result};
+use pipelight_error::{LibError, PipelightError};
 
 pub struct Filters;
 impl Filters {
     /**
     Keep only one pipeline among those which have the same name.
     */
-    pub fn dedup(pipelines: Vec<Pipeline>) -> Result<Vec<Pipeline>> {
+    pub fn dedup(pipelines: Vec<Pipeline>) -> Result<Vec<Pipeline>, PipelightError> {
         let mut pipelines = pipelines;
         let init_length = &pipelines.len();
         pipelines.sort_by_key(|p| p.clone().name);
@@ -33,7 +34,7 @@ impl Filters {
      * The more recent pipeline is the last.
      * The oldes pipeline is the first.
      */
-    pub fn sort_by_date_asc(pipelines: Vec<Pipeline>) -> Result<Vec<Pipeline>> {
+    pub fn sort_by_date_asc(pipelines: Vec<Pipeline>) -> Result<Vec<Pipeline>, PipelightError> {
         let mut pipelines = pipelines;
         if !pipelines.is_empty() {
             // Sort by date ascending
@@ -62,7 +63,7 @@ impl Filters {
      * The more recent pipeline is the first.
      * The oldes pipeline is the last.
      */
-    pub fn sort_by_date_desc(pipelines: Vec<Pipeline>) -> Result<Vec<Pipeline>> {
+    pub fn sort_by_date_desc(pipelines: Vec<Pipeline>) -> Result<Vec<Pipeline>, PipelightError> {
         let mut pipelines = pipelines;
         if !pipelines.is_empty() {
             // Sort by date descending
@@ -92,25 +93,29 @@ impl Filters {
     pub fn filter_by_status(
         pipelines: Vec<Pipeline>,
         status: Option<Status>,
-    ) -> Result<Vec<Pipeline>> {
+    ) -> Result<Vec<Pipeline>, PipelightError> {
         let mut pipelines = pipelines;
         pipelines.retain(|e| e.status == status);
         Ok(pipelines)
     }
-    pub fn has_watch_flag(pipelines: Vec<Pipeline>) -> Result<()> {
+    pub fn has_watch_flag(pipelines: Vec<Pipeline>) -> Result<(), PipelightError> {
         for pipeline in pipelines.clone() {
             if pipeline.is_watchable().is_ok() {
                 return Ok(());
             }
         }
         let message = "no watchable pipelines";
-        Err(Error::msg(message))
+        let err = LibError::builder().msg(message).help("").build();
+        Err(err.into())
     }
     pub fn to_hashmap(pipelines: Vec<Pipeline>) -> HashMap<Uuid, Pipeline> {
         let map: HashMap<_, _> = pipelines.iter().map(|e| (e.uuid, e.to_owned())).collect();
         map
     }
-    pub fn filter_by_name(pipelines: Vec<Pipeline>, name: &str) -> Result<Vec<Pipeline>> {
+    pub fn filter_by_name(
+        pipelines: Vec<Pipeline>,
+        name: &str,
+    ) -> Result<Vec<Pipeline>, PipelightError> {
         let mut pipelines = pipelines;
         pipelines.retain(|e| e.name == name);
         Ok(pipelines)

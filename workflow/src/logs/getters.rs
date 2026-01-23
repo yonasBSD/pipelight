@@ -3,25 +3,32 @@ use crate::pipeline::Filters;
 use crate::types::{Logs, Pipeline};
 // Trait
 use crate::traits::Getters;
-// Error Handling
-use miette::{Error, IntoDiagnostic, Result};
 // Global vars
 use crate::globals::LOGS;
+// Error Handling
+use log::warn;
+use miette::{Error, IntoDiagnostic, Result};
+use pipelight_error::PipelightError;
 
 impl Logs {
-    /**
-    Read logs and store them into a global variable.
-    Sorted by ascending date by default.
-    */
-    pub fn hydrate(&mut self) -> Result<Self> {
+    /// Read logs and store them into a global variable.
+    /// Sorted by ascending date by default.
+    pub fn hydrate(&mut self) -> Result<Self, PipelightError> {
         // Get global
         if LOGS.lock().unwrap().clone().is_none() {
             // Read log files
             let json_logs: Vec<String> = cast::Logs::read(".pipelight/logs")?;
             let mut pipelines: Vec<Pipeline> = vec![];
             for json in json_logs {
-                let pipeline = serde_json::from_str::<Pipeline>(&json).into_diagnostic()?;
-                pipelines.push(pipeline);
+                match serde_json::from_str::<Pipeline>(&json) {
+                    Ok(v) => {
+                        pipelines.push(v);
+                    }
+                    Err(e) => {
+                        // Ignore corrupted lines.
+                        warn!("Stripped corrupted log files.");
+                    }
+                };
             }
             pipelines = Filters::sort_by_date_asc(pipelines)?;
             // Set global

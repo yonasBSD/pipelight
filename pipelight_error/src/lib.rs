@@ -1,3 +1,4 @@
+use bon::bon;
 use miette::{Diagnostic, Report, SourceOffset, SourceSpan};
 use thiserror::Error;
 
@@ -45,6 +46,16 @@ pub struct LibError {
     pub message: String,
     #[help]
     pub help: String,
+}
+#[bon]
+impl LibError {
+    #[builder]
+    pub fn new(msg: &str, help: &str) -> Self {
+        Self {
+            message: msg.to_owned(),
+            help: help.to_owned(),
+        }
+    }
 }
 
 #[derive(Error, Diagnostic, Debug)]

@@ -282,7 +282,7 @@ dependencies = [
  "hcl-rs 0.19.2",
  "log",
  "miette",
- "pipelight_error 0.2.14",
+ "pipelight_error 0.2.15",
  "pipelight_exec",
  "pipelight_utils",
  "serde",
@@ -398,7 +398,7 @@ dependencies = [
  "miette",
  "once_cell",
  "owo-colors",
- "pipelight_error 0.2.14",
+ "pipelight_error 0.2.15",
  "pipelight_exec",
  "pipelight_git",
  "pipelight_teleport",
@@ -2597,13 +2597,13 @@ checksum = "8b870d8c151b6f2fb93e84a13146138f05d02ed11c7e7c54f8826aaaf7c9f184"
 
 [[package]]
 name = "pipelight"
-version = "0.10.0"
+version = "0.10.1"
 dependencies = [
  "cli",
  "log",
  "miette",
  "owo-colors",
- "pipelight_error 0.2.14",
+ "pipelight_error 0.2.15",
  "pipelight_utils",
 ]
 
@@ -2612,7 +2612,7 @@ name = "pipelight_config"
 version = "0.5.11"
 dependencies = [
  "miette",
- "pipelight_error 0.2.14",
+ "pipelight_error 0.2.15",
 ]
 
 [[package]]
@@ -2634,8 +2634,9 @@ dependencies = [
 
 [[package]]
 name = "pipelight_error"
-version = "0.2.14"
+version = "0.2.15"
 dependencies = [
+ "bon",
  "hcl-rs 0.19.2",
  "miette",
  "serde_json",
@@ -2685,7 +2686,7 @@ version = "0.2.12"
 dependencies = [
  "log",
  "miette",
- "pipelight_error 0.2.14",
+ "pipelight_error 0.2.15",
  "pipelight_git",
  "pipelight_utils",
  "strum",
@@ -4459,6 +4460,7 @@ dependencies = [
  "miette",
  "once_cell",
  "owo-colors",
+ "pipelight_error 0.2.15",
  "pipelight_exec",
  "pipelight_git",
  "pipelight_utils",
